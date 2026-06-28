@@ -18,38 +18,8 @@ option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(ENABLE_TESTING "Enable unit test build" OFF)
 
 if (NOT MSVC)
-    # Specify the target architecture (Linux). For Windows based generator use rather
-    # '-A Win32' or '-A x64 options'
-
-    if(NOT DEFINED TARGET_ARCH)
-        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(TARGET_ARCH x64)
-        else()
-            set(TARGET_ARCH x86)
-        endif()
-    endif()
-
-    set(TARGET_ARCH ${TARGET_ARCH} CACHE STRING "the target architecture")
-    set_property(CACHE TARGET_ARCH PROPERTY STRINGS x86 x64)
-
-    if (TARGET_ARCH STREQUAL "x86")
-        set(CMAKE_C_FLAGS   -m32)
-        set(CMAKE_CXX_FLAGS -m32)
-    elseif(TARGET_ARCH STREQUAL "x64")
-        set(CMAKE_C_FLAGS   -m64)
-        set(CMAKE_CXX_FLAGS -m64)
-    else()
-        message(FATAL_ERROR "Incorrect target architecture specified. "
-                            "It should be either x86 or x64")
-    endif()
-
-    # Get the architecture: x86 vs x64
-    if(TARGET_ARCH STREQUAL "x64")
-        set(BIT "x86_64")
-    else()
-        set(BIT "x86")
-    endif()
-
+    # Modern compilers default to native architecture - no need for explicit -m32/-m64
+    # Let CMake and the toolchain handle architecture selection
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
